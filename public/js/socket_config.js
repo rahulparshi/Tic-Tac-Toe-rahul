@@ -70,6 +70,23 @@ socket.on("gameOver", function() {
   });
 });
 
+socket.on("wait", function() {
+  //Think of reusability creat a function based on parameter enable or disable the board
+  gameEntities.forEach(entty => {
+    entty.disabled = true;
+  });
+  //console.log("waiting for other user");
+  output.innerHTML += "<p><strong>Admin: </strong>waiting for other user</p>";
+});
+
+socket.on("start", function() {
+  //Think of reusability creat a function based on parameter enable or disable the board
+  gameEntities.forEach(entty => {
+    entty.disabled = false;
+  });
+  output.innerHTML += "<p><strong>Admin: </strong>game started</p>";
+});
+
 // Emit events
 btn.addEventListener("click", function() {
   socket.emit("chat", {
