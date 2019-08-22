@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Tic-Tac-Toe</title>
+    <style media="screen">
+      .container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        text-align: center;
+        grid-gap: 2px;
+        padding: 2% 20%;
+      }
+      .container button {
+        background-color: grey;
+        padding: 10%;
+      }
+      h1 {
+        text-align: center;
+        color: crimson;
+      }
+    </style>
+    <!-- socket.io -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script> -->
+    <script src="/socket.io/socket.io.js"></script>    
+  </head>
+  <body>
+    <h1>Tic-Tac-Toe</h1>
+    <% include board %>
+    <input type="button" id="reset" value="reset" />
+
+    <!-- change the id names -->
+    <p id="status"></p>
+
+    <!-- chat -->
+    <div id="mario-chat">
+      <h2>Chat</h2>
+      <div id="chat-window">
+        <div id="output"></div>
+        <div id="feedback"></div>
+      </div>
+      <input id="handle" type="text" placeholder="Handle" />
+      <input id="message" type="text" placeholder="Message" />
+      <button id="send">Send</button>
+    </div>
+
+    <script src="../js/socket_config.js"></script>
+    <script src="../js/board.js"></script>
+  </body>  
+</html>
