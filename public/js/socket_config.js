@@ -87,6 +87,11 @@ socket.on("start", function() {
   output.innerHTML += "<p><strong>Admin: </strong>game started</p>";
 });
 
+socket.on("info", function(data) {
+  console.log("info " + data);
+  output.innerHTML += `<p><strong>Admin: </strong>${data.msg}</p>`;
+});
+
 // Emit events
 btn.addEventListener("click", function() {
   socket.emit("chat", {
