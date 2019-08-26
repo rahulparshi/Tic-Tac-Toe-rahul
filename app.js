@@ -1,6 +1,5 @@
 const express = require("express");
 const socket = require("socket.io");
-
 const app = express();
 //express app set up
 //ToDo: try to do it with http instead of express as we are using only one html page
@@ -22,8 +21,6 @@ let waiting_rooms = [];
 let connected_rooms = [];
 const CONST_ROOM_PREFIX = "lobby_";
 let room_suffix = 0;
-
-const socketIds = [];
 
 let io = socket(server);
 io.on("connection", socket => {
@@ -55,17 +52,11 @@ io.on("connection", socket => {
 
   socket.join(room_name);
   socket.room = room_name;
-  //ToDo: emit disable event for waiting rooms
-  //and send admin messages
   if (waiting_rooms.length != 0) io.sockets.to(room_name).emit("wait");
   else io.sockets.to(room_name).emit("start"); //later change the event name
 
-  socketIds.push(socket.id); //try to remove the socket id if the user is dis connected
-
   socket.on("click", function(data) {
     //ToDo: find another better solution for passing unique color to a socket
-    // if (socketIds.indexOf(socket.id) % 2 == 0) data.color = "crimson";
-    // else data.color = "cadetblue";
 
     data.color = socket.color;
 
@@ -103,9 +94,17 @@ io.on("connection", socket => {
           " has left! Match ended with no result. Resetting the game"
       }); //later update ID with the name
 
+      //      console.log(Object.keys(io.sockets.adapter.rooms[socket.room].sockets)); //returns array of socketId's//not used in the code
+
+      let sockets1 = io.sockets.sockets; //clean this clumsy code
+      for (let socketId in sockets1) {
+        let socket1 = sockets1[socketId]; //loop through and do whatever with each connected socket
+        socket1.color = "crimson"; //make the remaining user as first user
+      }
+
       socket.broadcast.to(socket.room).emit("reset");
       socket.broadcast.to(socket.room).emit("wait");
-      socket.color = "crimson"; //make the remaining user as first user
+      // socket.color = "crimson"; //make the remaining user as first user
       connected_rooms.splice(connected_rooms.indexOf(socket.room), 1);
       waiting_rooms.push(socket.room);
     }
