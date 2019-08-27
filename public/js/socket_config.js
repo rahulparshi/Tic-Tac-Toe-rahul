@@ -1,16 +1,13 @@
-// Make connection
-// var socket = io.connect("http://10.235.221.236:5500");
 var socket = io();
-//("http://localhost:5500");
 
 // Query DOM
 const message = document.getElementById("message"),
   handle = document.getElementById("handle"),
   btn = document.getElementById("send"),
   output = document.getElementById("output"),
-  feedback = document.getElementById("feedback");
-const gameEntities = document.querySelectorAll(".game_entity");
-const resetbtn = document.getElementById("reset"),
+  feedback = document.getElementById("feedback"),
+  gameEntities = document.querySelectorAll(".game_entity"),
+  resetbtn = document.getElementById("reset"),
   status = document.getElementById("status");
 
 resetbtn.style.visibility = "hidden";
@@ -48,11 +45,19 @@ socket.on("click", function(data) {
   const winner = isGameOver();
 
   if (winner) {
-    socket.emit("gameOver", { winner: winner });
+    socket.emit("gameOver");
     resetbtn.style.visibility = "visible";
     status.style.visibility = "visible";
-    if (winner == socket.id) status.innerText = "You won the match";
-    else status.innerText = "You loose the match";
+    if (winner == "DRAW")
+      output.innerHTML =
+        "<p><strong>Admin: </strong>Match draw</p>" + output.innerHTML;
+    else if (winner == socket.id) {
+      output.innerHTML =
+        "<p><strong>Admin: </strong>You won the match</p>" + output.innerHTML;
+    } else {
+      output.innerHTML =
+        "<p><strong>Admin: </strong>You lost the match</p>" + output.innerHTML;
+    }
   }
 });
 
@@ -64,32 +69,32 @@ socket.on("enable", function() {
   });
 });
 
-socket.on("gameOver", function() {
+function toggleGameEntites(status) {
+  //look for a good variable name
   gameEntities.forEach(entty => {
-    entty.disabled = true;
+    entty.disabled = status;
   });
+}
+
+socket.on("gameOver", function() {
+  toggleGameEntites(true);
 });
 
 socket.on("wait", function() {
-  //Think of reusability creat a function based on parameter enable or disable the board
-  gameEntities.forEach(entty => {
-    entty.disabled = true;
-  });
-  //console.log("waiting for other user");
-  output.innerHTML += "<p><strong>Admin: </strong>waiting for other user</p>";
+  toggleGameEntites(true);
+  output.innerHTML =
+    "<p><strong>Admin: </strong>waiting for other user</p>" + output.innerHTML;
 });
 
 socket.on("start", function() {
-  //Think of reusability creat a function based on parameter enable or disable the board
-  gameEntities.forEach(entty => {
-    entty.disabled = false;
-  });
-  output.innerHTML += "<p><strong>Admin: </strong>game started</p>";
+  toggleGameEntites(false);
+  output.innerHTML =
+    "<p><strong>Admin: </strong>game started</p>" + output.innerHTML;
 });
 
 socket.on("info", function(data) {
-  console.log("info " + data);
-  output.innerHTML += `<p><strong>Admin: </strong>${data.msg}</p>`;
+  output.innerHTML =
+    `<p><strong>Admin: </strong>${data.msg}</p>` + output.innerHTML;
 });
 
 // Emit events
@@ -108,8 +113,13 @@ message.addEventListener("keypress", function() {
 // Listen for events
 socket.on("chat", function(data) {
   feedback.innerHTML = "";
-  output.innerHTML +=
-    "<p><strong>" + data.handle + ": </strong>" + data.message + "</p>";
+  output.innerHTML =
+    "<p><strong>" +
+    data.handle +
+    ": </strong>" +
+    data.message +
+    "</p>" +
+    output.innerHTML;
 });
 
 socket.on("typing", function(data) {

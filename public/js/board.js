@@ -4,41 +4,20 @@ function isGameOver() {
   //ToDo: if possible re write the logic by decalring row, col variables outside then there is no
   //need of using isMatchOver thing
 
-  //left diagonal
-  //   if (
-  //     game_array[0][0] === game_array[1][1] &&
-  //     game_array[1][1] === game_array[2][2] &&
-  //     game_array[1][1] != undefined
-  //   )
-  //     return game_array[0][0];
-
-  //   //right diagonal
-  //   if (
-  //     game_array[0][2] === game_array[1][1] &&
-  //     game_array[1][1] === game_array[2][1] &&
-  //     game_array[1][1] != undefined
-  //   )
-  //     return game_array[0][0];
-
-  //   for (let i = 0; i < 3; i++) {
-  //     //rows
-  //     if (
-  //       game_array[i][0] === game_array[i][1] &&
-  //       game_array[i][1] === game_array[i][2] &&
-  //       game_array[1][1] != undefined
-  //     )
-  //       return game_array[i][0];
-  //     //cols
-  //     if (
-  //       game_array[0][i] === game_array[1][i] &&
-  //       game_array[1][i] === game_array[2][i] &&
-  //       game_array[1][1] != undefined
-  //     )
-  //       return game_array[0][i];
-
   let isMatchOver = true;
 
+  //checking Draw condition:
+  for (let row = 0; row < 3; row++) {
+    for (let col = 0; col < 3; col++) {
+      if (game_array[row][col] == undefined) {
+        isMatchOver = false;
+        break;
+      }
+    }
+  }
+  if (isMatchOver) return "DRAW";
   //new left diagonal logic
+  isMatchOver = true;
   for (let i = 1; i < 3; i++) {
     if (
       game_array[i][i] == undefined ||

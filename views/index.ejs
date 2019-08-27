@@ -21,8 +21,27 @@
       }
     </style>
     <!-- socket.io -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script> -->
-    <script src="/socket.io/socket.io.js"></script>    
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- favicon -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="favicon/favicon-16x16.png"
+    />
+    <link rel="manifest" href="favicon/site.webmanifest" />
   </head>
   <body>
     <h1>Tic-Tac-Toe</h1>
@@ -35,16 +54,16 @@
     <!-- chat -->
     <div id="mario-chat">
       <h2>Chat</h2>
-      <div id="chat-window">
-        <div id="output"></div>
-        <div id="feedback"></div>
-      </div>
-      <input id="handle" type="text" placeholder="Handle" />
+      <input id="handle" type="text" placeholder="Nick Name" />
       <input id="message" type="text" placeholder="Message" />
       <button id="send">Send</button>
+      <div id="chat-window">
+        <div id="feedback"></div>
+        <div id="output"></div>
+      </div>
     </div>
 
     <script src="../js/socket_config.js"></script>
     <script src="../js/board.js"></script>
-  </body>  
+  </body>
 </html>

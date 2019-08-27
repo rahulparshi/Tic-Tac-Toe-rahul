@@ -27,13 +27,6 @@ io.on("connection", socket => {
   console.info("made socket connection", socket.id);
   let room_name = "";
 
-  // console.log("connection event");
-  // console.log("before");
-
-  // console.log("connected rooms", connected_rooms);
-  // console.log("waiting rooms", waiting_rooms);
-  // console.log("room", room_name);
-
   if (waiting_rooms.length == 0) {
     room_name = CONST_ROOM_PREFIX + room_suffix;
     waiting_rooms.push(room_name);
@@ -44,11 +37,6 @@ io.on("connection", socket => {
     connected_rooms.push(room_name);
     socket.color = "cadetblue"; //for second user
   }
-  // console.log("After");
-
-  // console.log("connected rooms", connected_rooms);
-  // console.log("waiting rooms", waiting_rooms);
-  // console.log("room", room_name);
 
   socket.join(room_name);
   socket.room = room_name;
@@ -68,15 +56,14 @@ io.on("connection", socket => {
     io.sockets.to(socket.room).emit("reset");
   });
 
-  socket.on("gameOver", function(data) {
-    io.sockets.to(socket.room).emit("gameOver", data);
+  socket.on("gameOver", function() {
+    io.sockets.to(socket.room).emit("gameOver");
   });
-  // Handle chat event
+
   socket.on("chat", function(data) {
     io.sockets.to(socket.room).emit("chat", data);
   });
 
-  // Handle typing event
   socket.on("typing", function(data) {
     socket.broadcast.to(socket.room).emit("typing", data);
   });
@@ -98,19 +85,16 @@ io.on("connection", socket => {
 
       let sockets1 = io.sockets.sockets; //clean this clumsy code
       for (let socketId in sockets1) {
-        let socket1 = sockets1[socketId]; //loop through and do whatever with each connected socket
+        let socket1 = sockets1[socketId];
         socket1.color = "crimson"; //make the remaining user as first user
       }
 
       socket.broadcast.to(socket.room).emit("reset");
       socket.broadcast.to(socket.room).emit("wait");
-      // socket.color = "crimson"; //make the remaining user as first user
+      // socket.color = "crimson";
       connected_rooms.splice(connected_rooms.indexOf(socket.room), 1);
       waiting_rooms.push(socket.room);
     }
-
-    //present code only handles if the 2 user are connected and one of them is disconnected
-    //if there is only one person and he disconnects it will not work
 
     //check whether it is a waiting room or connected
     //if it is connected room
@@ -126,8 +110,8 @@ io.on("connection", socket => {
 });
 
 //ToDO at server side
-//work on discoonect event[Handle waiting room functionality also.]
 //try to get all the event names from one constant file
 
 //ToDo at client side
 //enable disable button even if the matach ends with draw
+//enter button should send the message
