@@ -6,18 +6,7 @@ function isGameOver() {
 
   let isMatchOver = true;
 
-  //checking Draw condition:
-  for (let row = 0; row < 3; row++) {
-    for (let col = 0; col < 3; col++) {
-      if (game_array[row][col] == undefined) {
-        isMatchOver = false;
-        break;
-      }
-    }
-  }
-  if (isMatchOver) return "DRAW";
   //new left diagonal logic
-  isMatchOver = true;
   for (let i = 1; i < 3; i++) {
     if (
       game_array[i][i] == undefined ||
@@ -70,6 +59,19 @@ function isGameOver() {
     }
     if (isMatchOver) return game_array[col][col];
   }
+
+  //checking Draw condition:
+  isMatchOver = true;
+  for (let row = 0; row < 3; row++) {
+    for (let col = 0; col < 3; col++) {
+      if (game_array[row][col] == undefined) {
+        isMatchOver = false;
+        break;
+      }
+    }
+  }
+  if (isMatchOver) return "DRAW";
+
   return null;
 }
 

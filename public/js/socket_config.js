@@ -83,13 +83,14 @@ socket.on("gameOver", function() {
 socket.on("wait", function() {
   toggleGameEntites(true);
   output.innerHTML =
-    "<p><strong>Admin: </strong>waiting for other user</p>" + output.innerHTML;
+    "<p><strong>Admin: </strong>waiting for other player.</p>" +
+    output.innerHTML;
 });
 
 socket.on("start", function() {
   toggleGameEntites(false);
   output.innerHTML =
-    "<p><strong>Admin: </strong>game started</p>" + output.innerHTML;
+    "<p><strong>Admin: </strong>game started.</p>" + output.innerHTML;
 });
 
 socket.on("info", function(data) {

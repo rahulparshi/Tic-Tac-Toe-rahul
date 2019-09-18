@@ -83,17 +83,35 @@ io.on("connection", socket => {
 
       //      console.log(Object.keys(io.sockets.adapter.rooms[socket.room].sockets)); //returns array of socketId's//not used in the code
 
-      let sockets1 = io.sockets.sockets; //clean this clumsy code
-      for (let socketId in sockets1) {
-        let socket1 = sockets1[socketId];
-        socket1.color = "crimson"; //make the remaining user as first user
-      }
+      connected_rooms.splice(connected_rooms.indexOf(socket.room), 1);
 
       socket.broadcast.to(socket.room).emit("reset");
-      socket.broadcast.to(socket.room).emit("wait");
-      // socket.color = "crimson";
-      connected_rooms.splice(connected_rooms.indexOf(socket.room), 1);
-      waiting_rooms.push(socket.room);
+      //check here if in the waiting room is empty or not. If it is empty add the otheer player to the
+      //waiting room list else connect the other player to the person waiting in the room.
+      if (waiting_rooms.length == 0 && isWaitingRoom != "YES") {
+        waiting_rooms.push(socket.room);
+        socket.broadcast.to(socket.room).emit("wait");
+        let sockets1 = io.sockets.sockets; //clean this clumsy code
+        for (let socketId in sockets1) {
+          let socket1 = sockets1[socketId];
+          if (socket1.room === socket.room) {
+            socket1.color = "crimson";
+          } //make the remaining user as first user
+        }
+      } else {
+        room_name = waiting_rooms.pop();
+        connected_rooms.push(room_name);
+        sockets1 = io.sockets.sockets; //clean this clumsy code
+        for (let socketId in sockets1) {
+          let socket1 = sockets1[socketId];
+          if (socket1.room === socket.room) {
+            socket1.color = "cadetblue"; //for the second user
+            socket1.join(room_name);
+            socket1.room = room_name;
+          }
+        }
+        io.sockets.to(room_name).emit("start"); //later change the event name
+      }
     }
 
     //check whether it is a waiting room or connected
@@ -113,5 +131,4 @@ io.on("connection", socket => {
 //try to get all the event names from one constant file
 
 //ToDo at client side
-//enable disable button even if the matach ends with draw
 //enter button should send the message
